@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBI Banking Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        .header {
+            background-color: #003366;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .notice {
+            color: red;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .content {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            gap: 40px;
+        }
+        .section {
+            width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .section h2 {
+            margin-bottom: 20px;
+            color: #003366;
+        }
+        .login-btn {
+            margin: 15px 0;
+            padding: 12px 25px;
+            background-color: #003366;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .login-btn:hover {
+            background-color: #0055a5;
+        }
+        .links {
+            margin-top: 15px;
+            text-align: left;
+        }
+        .links p {
+            margin: 5px 0;
+            cursor: pointer;
+            color: #003366;
+        }
+        .links p:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #003366;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+                align-items: center;
+            }
+            .section {
+                width: 90%;
+            }
+        }
+        @media (min-width: 769px) {
+            .content {
+                flex-direction: row;
+            }
+            .section {
+                width: 400px;
+            }
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            alert('Welcome to SRS Bank!');
+        };
+    </script>
+</head>
+<body>
+    <div class="header">
+        SRS ONLINE BANKING
+    </div>
+    <div class="notice">
+        If slowness is observed during Login Page loading, please refresh the page for better experience.
+    </div>
+    <div class="content">
+        <div class="section">
+            <img src="./10106242.png" width="50px" height="50px" style="border-radius: 50px;"/>
+            <h3>User Login</h3>
+            <button class="login-btn">LOGIN</button>
+            <div class="links">
+                <p><img src="./image2.png" width="15px" height="15px" style="border-radius: 20px;"/> How Do I?</p>
+                <p style="display: flex; align-items: center; border-radius: 30px;">
+                    <img src="./image3.png" width="30" height="30" alt="Customer Care" style="border-radius: 30px;"/>
+                    Customer Care
+                </p>
+                            </div>
+        </div>
+        <div class="section">
+            <img src="./image1.png" width="50px" height="50px" style="border-radius: 50px;"/> 
+            <h3>Employee Login</h3>
+            <button class="login-btn">LOGIN</button>
+            <div class="links">
+                <p><img src="./image2.png" width="15px" height="15px" style="border-radius: 20px;"/> How Do I?</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        SRS Bank never asks for confidential information like PIN and OTP. Beware of fraud.
+    </div>
+</body>
+</html>
