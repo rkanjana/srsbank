@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFC Bank - Employee</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('./image5.png') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: black;
+        }
+
+        .bank-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .input-container input.account-number {
+            background-image: url('image8.png');
+            background-repeat: no-repeat;
+            background-size: 24px 24px;
+            background-position: 10px center;
+        }
+
+        .input-container input.password {
+            background-image: url('image7.png');
+            background-repeat: no-repeat;
+            background-size: 24px 24px;
+            background-position: 10px center;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 128, 0.8);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .login-container button:hover {
+            background: rgba(0, 0, 180, 0.9);
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-top: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="./WhatsApp Image 2025-02-16 at 20.49.25_8f58e737.jpg" alt="Bank Logo" class="bank-logo" style="border-radius: 20px;">
+        <h1>Employee - Login</h1>
+        <form style="width: 300px;">
+            <div class="input-container">
+                <input type="text" class="account-number" placeholder="Employee ID" required>
+            </div>
+            <div class="input-container">
+                <input type="password" class="password" placeholder="Password" required>
+            </div>
+            <div class="options">
+                <label style="color: black;text-align: right;"><input type="checkbox"> Remember Me</label>
+            </div>
+            <br/>
+            <button type="submit" style="width: 350px;">Login</button>
+        </form>
+    </div>
+</body>
+</html>
