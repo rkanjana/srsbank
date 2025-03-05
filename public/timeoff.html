@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 sidebar p-5 space-y-4 bg-white shadow-md">
+            <h2 class="text-xl font-bold text-blue-600">NEXUS BANK</h2>
+            <nav class="space-y-2">
+                <a href="./emplyeepage.html" class="block p-2 text-gray-700 rounded">🏠 Home</a>
+                <a href="timeoff.html" class="block p-2 text-gray-700 rounded">📅 Time Off</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <header class="text-2xl font-semibold text-blue-600">Nexus Bank - Time Off Request</header>
+
+            <!-- Time Off Request Form -->
+            <div class="bg-white p-6 mt-6 rounded shadow-md">
+                <h3 class="text-lg font-semibold">Request Time Off</h3>
+
+                <label class="block mt-2 text-gray-700">Start Date:</label>
+                <input type="date" id="startDate" class="p-2 border rounded w-full">
+
+                <label class="block mt-2 text-gray-700">End Date:</label>
+                <input type="date" id="endDate" class="p-2 border rounded w-full">
+
+                <label class="block mt-2 text-gray-700">Reason:</label>
+                <input type="text" id="reason" placeholder="Enter reason for leave" class="p-2 border rounded w-full">
+                
+                <button onclick="requestTimeOff()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Submit Request</button>
+                <p id="requestMessage" class="mt-2 text-green-500 hidden"></p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function requestTimeOff() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const reason = document.getElementById('reason').value;
+            const message = document.getElementById('requestMessage');
+
+            if (startDate && endDate && reason.trim() !== "") {
+                message.textContent = `Time off request submitted from ${startDate} to ${endDate}.`;
+                message.classList.remove('hidden');
+
+                // Store request
+                let requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+                requests.push({
+                    startDate: startDate,
+                    endDate: endDate,
+                    reason: reason,
+                    status: "Pending"
+                });
+
+                localStorage.setItem('timeOffRequests', JSON.stringify(requests));
+            } else {
+                message.textContent = 'Please fill out all fields';
+                message.classList.add('text-red-500');
+                message.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

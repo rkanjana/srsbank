@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/emoployeepage.css"/>
+
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 sidebar p-5 space-y-4">
+            <h2 class="text-xl font-bold text-blue-600">NEXUS</h2>
+            <nav class="space-y-2">
+                <a href="#" class="block p-2 text-gray-700 rounded">🏠 Home</a>
+                <a href="#" class="block p-2 text-gray-700 rounded">💰 Earnings</a>
+                <a href="#" class="block p-2 text-gray-700 rounded">👤 Personal</a>
+                <a href="#" class="block p-2 text-gray-700 rounded">🛠 Job</a>
+                <a href="#" class="block p-2 text-gray-700 rounded">🏦 Bank Account</a>
+                <a href="./timeoff.html" class="block p-2 text-gray-700 rounded">🕒 Time Off</a>
+                <a href="#" class="block p-2 text-gray-700 rounded">💼 Loan Approvals</a>
+                <a href="./deposit.html" class="block p-2 text-gray-700 rounded">💵 Deposits</a> 
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <header class="flex justify-between items-center pb-4 header">
+                <h1 class="text-2xl font-semibold"></h1>
+                <div class="text-blue-600 font-bold">NEXUS BANK ⏷</div>
+            </header>
+
+            <section class="mt-6 grid md:grid-cols-3 gap-6">
+                <!-- Profile Section -->
+                <div class="bg-white p-4 rounded shadow-md">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 profile-pic rounded-full"></div>
+                        <div>
+                            <h2 class="text-xl font-semibold">Anthony Findley</h2>
+                            <p class="text-gray-500">tonyf@paws.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="notification p-4 rounded shadow-md">
+                    <h3 class="text-lg font-semibold">Notifications</h3>
+                    <p class="mt-2">✅ Anthony has a PTO request.</p>
+                </div>
+            </section>
+
+            <section class="mt-6 grid md:grid-cols-2 gap-6">
+                <!-- Tile 1 -->
+                <div class="bg-white p-6 rounded shadow-md text-center tile cursor-pointer">
+                    <p class="text-lg font-bold">💸 You've Been Paid!</p>
+                    <p class="text-3xl font-semibold mt-2">06/26</p>
+                </div>
+
+                <!-- Tile 2 -->
+                <div class="bg-white p-6 rounded shadow-md text-center tile cursor-pointer">
+                    <p class="text-lg font-bold">📄 Personal Information</p>
+                    <p class="text-sm text-gray-500 mt-2">Make changes or updates anytime.</p>
+                </div>
+            </section>
+
+            <!-- New Loan Approvals Section -->
+            <section class="mt-6 grid md:grid-cols-1 gap-6">
+                <div class="loan-approval p-6 rounded shadow-md">
+                    <h3 class="text-lg font-semibold">Loan Approvals</h3>
+                    <p class="mt-2">📄 Your loan application has been approved!</p>
+                    <p class="mt-1 text-gray-500">Amount: ₹50,000</p>
+                    <p class="mt-1 text-gray-500">Interest Rate: 8%</p>
+                    <p class="mt-1 text-gray-500">Repayment Period: 2 years</p>
+                </div>
+            </section>
+
+            <!-- New Deposits Section -->
+            <section class="mt-6 grid md:grid-cols-1 gap-6">
+                <div class="deposit p-6 rounded shadow-md">
+                    <h3 class="text-lg font-semibold">Deposits</h3>
+                    <div id="depositHistory"></div>
+                </div>
+            </section>
+            
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    let deposits = JSON.parse(localStorage.getItem('deposits')) || [];
+            
+                    if (deposits.length > 0) {
+                        const depositHistory = document.getElementById('depositHistory');
+                        depositHistory.innerHTML = ""; // Clear previous content
+            
+                        deposits.forEach(deposit => {
+                            let depositItem = document.createElement("div");
+                            depositItem.classList.add("mt-3", "p-3", "border", "rounded", "shadow-sm", "bg-gray-50");
+                            depositItem.innerHTML = `
+                                <p class="text-green-600 font-semibold">💵 Deposit Successful!</p>
+                                <p class="text-gray-700">Amount: ₹${deposit.amount}</p>
+                                <p class="text-gray-500">Date: ${deposit.date}</p>
+                            `;
+                            depositHistory.appendChild(depositItem);
+                        });
+                    }
+                });
+            </script>
+            
+            
+            
+        </main>
+    </div>
+</body>
+</html>
