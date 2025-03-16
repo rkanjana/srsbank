@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SFC Bank - Employee</title>
+    <title>NEXUS Bank - Employee</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,20 +51,6 @@
             background: rgba(255, 255, 255, 0.8);
         }
 
-        .input-container input.account-number {
-            background-image: url('pics/image8.png');
-            background-repeat: no-repeat;
-            background-size: 24px 24px;
-            background-position: 10px center;
-        }
-
-        .input-container input.password {
-            background-image: url('pics/image7.png');
-            background-repeat: no-repeat;
-            background-size: 24px 24px;
-            background-position: 10px center;
-        }
-
         .login-container button {
             width: 100%;
             padding: 12px;
@@ -89,9 +75,47 @@
             margin-top: 10px;
             color: white;
         }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            margin: 20% auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-btn {
+            background: red;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .close-btn:hover {
+            background: darkred;
+        }
     </style>
 </head>
 <body>
+
     <div class="login-container">
         <img src="pics/WhatsApp Image 2025-02-16 at 20.49.25_8f58e737.jpg" alt="Bank Logo" class="bank-logo" style="border-radius: 20px;">
         <h1>Employee - Login</h1>
@@ -103,11 +127,46 @@
                 <input type="password" class="password" placeholder="Password" required>
             </div>
             <div class="options">
-                <label style="color: black;text-align: right;"><input type="checkbox"> Remember Me</label>
+                <label style="color: black;"><input type="checkbox"> Remember Me</label>
             </div>
             <br/>
             <button type="submit" style="width: 350px;">Login</button>
         </form>
     </div>
+
+    <!-- Modal for Incorrect Login -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <p>Incorrect Employee ID or Password!</p>
+            <button class="close-btn">Close</button>
+        </div>
+    </div>
+
+    <script>
+    document.querySelector("form").addEventListener("submit", async function(event) {
+    event.preventDefault(); // Prevent form from reloading
+
+    const emp_id = document.querySelector(".account-number").value;
+    const password = document.querySelector(".password").value;
+
+    const response = await fetch("http://localhost:5000/employee-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emp_id, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        alert(data.message);
+        localStorage.setItem("employee", JSON.stringify(data.employee)); // Store employee details
+        window.location.href = "emplyeepage.html"; // Redirect to dashboard
+    } else {
+        // Show the modal when login fails
+        document.getElementById("errorModal").style.display = "block";
+    }
+});
+    </script>
+
 </body>
 </html>

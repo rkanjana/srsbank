@@ -27,19 +27,27 @@
             <header class="text-2xl font-semibold text-blue-600">Nexus Bank - Time Off Request</header>
 
             <!-- Time Off Request Form -->
-            <div class="bg-white p-6 mt-6 rounded shadow-md">
-                <h3 class="text-lg font-semibold">Request Time Off</h3>
+            <div class="bg-white p-6 mt-6 rounded shadow-md max-w-md">
+                <h3 class="text-lg font-semibold mb-4">Request Time Off</h3>
 
-                <label class="block mt-2 text-gray-700">Start Date:</label>
-                <input type="date" id="startDate" class="p-2 border rounded w-full">
+                <label class="block text-gray-700">Employee ID:</label>
+                <input type="number" id="emp_id" class="p-2 border rounded w-full mb-2" placeholder="Enter your Employee ID" required>
 
-                <label class="block mt-2 text-gray-700">End Date:</label>
-                <input type="date" id="endDate" class="p-2 border rounded w-full">
+                <label class="block text-gray-700">Start Date:</label>
+                <input type="date" id="startDate" class="p-2 border rounded w-full mb-2">
 
-                <label class="block mt-2 text-gray-700">Reason:</label>
-                <input type="text" id="reason" placeholder="Enter reason for leave" class="p-2 border rounded w-full">
-                
-                <button onclick="requestTimeOff()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Submit Request</button>
+                <label class="block text-gray-700">End Date:</label>
+                <input type="date" id="endDate" class="p-2 border rounded w-full mb-2">
+
+                <label class="block text-gray-700">Reason:</label>
+                <input type="text" id="reason" class="p-2 border rounded w-full mb-2" placeholder="Enter reason for leave">
+
+                <label class="block text-gray-700">Manager ID:</label>
+                <input type="number" id="manager_id" class="p-2 border rounded w-full mb-2" placeholder="Enter Manager ID">
+
+                <button onclick="requestTimeOff()" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700">
+                    Submit Request
+                </button>
                 <p id="requestMessage" class="mt-2 text-green-500 hidden"></p>
             </div>
         </main>
@@ -47,29 +55,35 @@
 
     <script>
         function requestTimeOff() {
+            const emp_id = document.getElementById('emp_id').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             const reason = document.getElementById('reason').value;
+            const manager_id = document.getElementById('manager_id').value;
             const message = document.getElementById('requestMessage');
 
-            if (startDate && endDate && reason.trim() !== "") {
-                message.textContent = `Time off request submitted from ${startDate} to ${endDate}.`;
-                message.classList.remove('hidden');
-
-                // Store request
-                let requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
-                requests.push({
-                    startDate: startDate,
-                    endDate: endDate,
-                    reason: reason,
-                    status: "Pending"
+            if (emp_id && startDate && endDate && reason.trim() !== "" && manager_id) {
+                fetch('http://localhost:5000/request-time-off', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ emp_id, start_date: startDate, end_date: endDate, reason, manager_id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    message.textContent = data.message;
+                    message.classList.remove('hidden', 'text-red-500');
+                    message.classList.add('text-green-500');
+                })
+                .catch(error => {
+                    message.textContent = "Error submitting request";
+                    message.classList.remove('hidden', 'text-green-500');
+                    message.classList.add('text-red-500');
+                    console.error(error);
                 });
-
-                localStorage.setItem('timeOffRequests', JSON.stringify(requests));
             } else {
-                message.textContent = 'Please fill out all fields';
+                message.textContent = "Please fill out all fields correctly.";
+                message.classList.remove('hidden', 'text-green-500');
                 message.classList.add('text-red-500');
-                message.classList.remove('hidden');
             }
         }
     </script>
