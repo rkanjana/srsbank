@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Bank Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #3A80F0, #ffffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 320px;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #2E4DA7;
+        }
+        .login-container p {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #3A80F0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .login-button:hover {
+            background: #1F5BD3;
+        }
+        .nexus-branding {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2E4DA7;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="nexus-branding">
+            Nexus Bank
+        </div>
+        <h2>Welcome to Nexus Bank</h2>
+        <p>Please choose your login type:</p>
+        <button class="login-button" onclick="window.location.href='userloginpage.html'">User Login</button>
+        <button class="login-button" onclick="window.location.href='employeeloginpage.html'">Employee Login</button>
+    </div>
+
+</body>
+</html>

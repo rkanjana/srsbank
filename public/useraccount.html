@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Account - Nexus Bank</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(to bottom, #3A80F0, #ffffff);
+        }
+        .header {
+            background: #2E4DA7;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .container {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 220px;
+            background: #F4F6FC;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h3 {
+            color: #2E4DA7;
+        }
+        .sidebar button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #3A80F0;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        .sidebar button:hover {
+            background: #1F5BD3;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .user-details h2 {
+            margin: 0;
+            color: #2E4DA7;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #3A80F0;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f4f8ff;
+        }
+        tr:hover {
+            background: #e0eaff;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>User Account - Nexus Bank</h1>
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Menu</h3>
+            <button onclick="showSection('account-details')">Account Details</button>
+            <button onclick="showSection('recent-transactions')">Transactions History</button>
+            <button onclick="showSection('money-transfer')">Money Transfer</button>
+            <button onclick="logout()">Logout</button>
+        </aside>
+        <div class="main-content">
+            <div class="user-info">
+                <div class="user-details">
+                    <h2 id="userName">Loading...</h2>
+                    <p>Account Number: <span id="userAccountNumber">Loading...</span></p>
+                    <p>Email: <span id="userEmail">Loading...</span></p>
+                    <p>Balance: ₹<span id="userBalance">Loading...</span></p>
+                    <p style="display: none;"">Account Type: <span id="userAccountType">Loading...</span></p>
+                    <p style="display: none;">IFSC Code: <span id="userIfscCode">Loading...</span></p>
+                </div>
+            </div>
+
+            <div class="user-activities" id="recent-transactions">
+                <h3>Recent Transactions</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch account details and transactions after login
+        const accountNumber = localStorage.getItem('account_number'); // Assuming account_number is saved in localStorage after login
+
+        if (accountNumber) {
+            fetchUserProfile(accountNumber);
+        } else {
+            alert('You must be logged in to view your account');
+            window.location.href = "userloginpage.html"; // Redirect to login page if not logged in
+        }
+
+        function fetchUserProfile(accountNumber) {
+            fetch(`http://localhost:3000/user-profile?account_number=${accountNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "User profile fetched successfully") {
+                        const profile = data.profile;
+                        
+                        document.getElementById("userName").innerText = profile.name;
+                        document.getElementById("userEmail").innerText = profile.email;
+                        document.getElementById("userAccountNumber").innerText = profile.account_number;
+                        document.getElementById("userBalance").innerText = profile.balance;
+                        document.getElementById("userAccountType").innerText = profile.account_type;
+                        document.getElementById("userIfscCode").innerText = profile.ifsc_code;
+                        
+                        // Display transactions
+                        const transactionTableBody = document.getElementById("transactionTable");
+                        profile.transactions.forEach(transaction => {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${transaction.transaction_type}</td>
+                                <td>₹${transaction.transaction_amount}</td>
+                                <td>${transaction.transaction_date}</td>
+                            `;
+                            transactionTableBody.appendChild(row);
+                        });
+                    } else {
+                        alert('Failed to fetch user profile');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching profile:', error);
+                    alert('Something went wrong. Please try again later.');
+                });
+        }
+        function logout() {
+            // Redirect to login page
+            window.location.href = "userloginpage.html";
+        }
+        function showSection(section) {
+            console.log("Show section:", section);
+        }
+    </script>
+</body>
+</html>

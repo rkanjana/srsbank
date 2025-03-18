@@ -3,97 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-        }
-        .hidden { display: none; }
-    </style>
+    <title>Deposit Money | Nexus Bank</title>
+    <link rel="stylesheet" href="css/style1.css"> <!-- Link to external CSS -->
+    <script defer src="js/deposit.js"></script>
 </head>
-<body class="bg-gray-100">
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 sidebar p-5 space-y-4 bg-white shadow-md">
-            <h2 class="text-xl font-bold text-blue-600">NEXUS BANK</h2>
-            <nav class="space-y-2">
-                <a href="./emplyeepage.html" class="block p-2 text-gray-700 rounded">🏠 Home</a>
-                <a href="#" class="block p-2 text-gray-700 rounded">💵 Deposits</a>
-            </nav>
-        </aside>
+<body>
+    <div class="container">
+        <h1 class="title">Nexus Bank</h1>
+        <div class="deposit-box">
+            <h2>Deposit Money</h2>
+            <form id="depositForm">
+                <label for="emp_id">Employee ID:</label>
+                <input type="text" id="emp_id" required placeholder="Enter Employee ID">
 
-        <!-- Main Content -->
-        <main class="flex-1 p-6">
-            <header class="text-2xl font-semibold text-blue-600">Nexus Bank - Deposit</header>
-            
-            <!-- Account Verification -->
-            <div class="bg-white p-6 mt-6 rounded shadow-md">
-                <h3 class="text-lg font-semibold">Verify Account</h3>
-                <input type="text" id="accountNumber" placeholder="Enter Account Number" class="mt-2 p-2 border rounded w-full">
-                <button onclick="verifyAccount()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Verify</button>
-                <p id="verificationMessage" class="mt-2 text-red-500 hidden"></p>
-            </div>
+                <label for="account_number">Account Number:</label>
+                <input type="text" id="account_number" required placeholder="Enter Account Number">
 
-            <!-- Deposit Form -->
-            <div id="depositSection" class="bg-white p-6 mt-6 rounded shadow-md hidden">
-                <h3 class="text-lg font-semibold">Deposit Money</h3>
-                <div class="mt-2 space-x-2">
-                    <button onclick="setAmount(100)" class="bg-gray-200 px-4 py-2 rounded">₹100</button>
-                    <button onclick="setAmount(1000)" class="bg-gray-200 px-4 py-2 rounded">₹1,000</button>
-                    <button onclick="setAmount(10000)" class="bg-gray-200 px-4 py-2 rounded">₹10,000</button>
-                </div>
-                <input type="number" id="depositAmount" placeholder="Enter Amount" class="mt-2 p-2 border rounded w-full">
-                <button onclick="depositMoney()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded">Deposit</button>
-                <p id="depositMessage" class="mt-2 text-green-500 hidden"></p>
-            </div>
-        </main>
+                <label for="amount">Deposit Amount:</label>
+                <input type="number" id="amount" required min="1" placeholder="Enter Amount">
+
+                <button type="submit" class="deposit-btn">Deposit</button>
+            </form>
+            <p id="message"></p>
+            <button class="back-btn" onclick="goBack()">⬅ Back</button>
+        </div>
     </div>
-
+    
     <script>
-        function verifyAccount() {
-            const accountInput = document.getElementById('accountNumber').value;
-            const message = document.getElementById('verificationMessage');
-            const depositSection = document.getElementById('depositSection');
-
-            if (accountInput === '1234567890') {
-                message.classList.add('hidden');
-                depositSection.classList.remove('hidden');
-            } else {
-                message.textContent = 'Invalid Account Number';
-                message.classList.remove('hidden');
-            }
-        }
-
-        function setAmount(amount) {
-            document.getElementById('depositAmount').value = amount;
-        }
-
-        function depositMoney() {
-            const depositAmount = document.getElementById('depositAmount').value;
-            const message = document.getElementById('depositMessage');
-    
-            if (depositAmount > 0) {
-                message.textContent = `₹${depositAmount} successfully deposited!`;
-                message.classList.remove('hidden');
-    
-                // Get existing deposits or initialize an empty array
-                let deposits = JSON.parse(localStorage.getItem('deposits')) || [];
-    
-                // Add new deposit with date
-                deposits.push({
-                    amount: depositAmount,
-                    date: new Date().toLocaleDateString()
-                });
-    
-                // Save back to localStorage
-                localStorage.setItem('deposits', JSON.stringify(deposits));
-            } else {
-                message.textContent = 'Enter a valid amount';
-                message.classList.add('text-red-500');
-                message.classList.remove('hidden');
-            }
+        function goBack() {
+            window.history.back(); // Navigates to the previous page
         }
     </script>
-    
 </body>
 </html>

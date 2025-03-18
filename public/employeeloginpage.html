@@ -7,12 +7,20 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: url('pics/image5.png') no-repeat center center/cover;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            flex-direction: column;
+        }
+
+        .heading {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .login-container {
@@ -25,7 +33,7 @@
             backdrop-filter: blur(10px);
         }
 
-        .login-container h2 {
+        .login-container h1 {
             margin-bottom: 20px;
             font-size: 24px;
             color: black;
@@ -35,6 +43,7 @@
             width: 60px;
             height: 60px;
             margin-bottom: 10px;
+            border-radius: 20px;
         }
 
         .input-container {
@@ -116,12 +125,14 @@
 </head>
 <body>
 
+    <div class="heading">NEXUS Bank</div>
+
     <div class="login-container">
-        <img src="pics/WhatsApp Image 2025-02-16 at 20.49.25_8f58e737.jpg" alt="Bank Logo" class="bank-logo" style="border-radius: 20px;">
+        <img src="pics/WhatsApp Image 2025-02-26 at 10.00.20_5af40025.jpg" alt="Bank Logo" class="bank-logo">
         <h1>Employee - Login</h1>
         <form style="width: 300px;">
             <div class="input-container">
-                <input type="text" class="account-number" placeholder="Employee ID" required>
+                <input type="text" class="emp-number" placeholder="Employee ID" required>
             </div>
             <div class="input-container">
                 <input type="password" class="password" placeholder="Password" required>
@@ -144,28 +155,28 @@
 
     <script>
     document.querySelector("form").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent form from reloading
+        event.preventDefault(); // Prevent form from reloading
 
-    const emp_id = document.querySelector(".account-number").value;
-    const password = document.querySelector(".password").value;
+        const emp_id = document.querySelector(".emp-number").value;
+        const password = document.querySelector(".password").value;
 
-    const response = await fetch("http://localhost:5000/employee-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emp_id, password })
+        const response = await fetch("http://localhost:3000/employee-login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ emp_id, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message);
+            localStorage.setItem("employee", JSON.stringify(data.employee)); // Store employee details
+            window.location.href = "emplyeepage.html"; // Redirect to dashboard
+        } else {
+            // Show the modal when login fails
+            document.getElementById("errorModal").style.display = "block";
+        }
     });
-
-    const data = await response.json();
-
-    if (response.ok) {
-        alert(data.message);
-        localStorage.setItem("employee", JSON.stringify(data.employee)); // Store employee details
-        window.location.href = "emplyeepage.html"; // Redirect to dashboard
-    } else {
-        // Show the modal when login fails
-        document.getElementById("errorModal").style.display = "block";
-    }
-});
     </script>
 
 </body>
