@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Statements</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #a2cdff; text-align: center; }
+        .container { max-width: 600px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background: #3A80F0; color: white; }
+        tr:nth-child(even) { background: #f4f8ff; }
+        .back-btn {
+            background: #3A80F0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Account Statements</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="statements-table">
+                <tr><td colspan="4">Loading...</td></tr>
+            </tbody>
+        </table>
+        <button class="back-btn" onclick="window.location.href='useraccount.html'">Back to Account</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Fetching statements...");
+            fetchStatements();
+        });
+    
+        async function fetchStatements() {
+    try {
+        const accountNumber = localStorage.getItem('account_number');
+        if (!accountNumber) throw new Error('Please login again');
+
+        const response = await fetch(`http://localhost:3000/statements/${accountNumber}`);
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const data = await response.json();
+        const table = document.getElementById("statements-table");
+        table.innerHTML = "";
+
+        if (!data.transactions || data.transactions.length === 0) {
+            table.innerHTML = "<tr><td colspan='4'>No transactions found</td></tr>";
+            return;
+        }
+
+        data.transactions.forEach(tx => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${formatDate(tx.date)}</td>
+                <td>${tx.sender || 'N/A'}</td>
+                <td>${tx.receiver || 'N/A'}</td>
+                <td>${tx.type || 'N/A'}</td>
+                <td>₹${formatAmount(tx.amount)}</td>
+            `;
+            table.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById("statements-table").innerHTML = 
+            `<tr><td colspan="4">Error: ${error.message}</td></tr>`;
+    }
+}
+
+function formatAmount(amount) {
+    if (amount === null || amount === undefined) return '0.00';
+    const num = Number(amount);
+    return isNaN(num) ? '0.00' : num.toFixed(2);
+}
+
+function formatDate(dateString) {
+    return dateString ? new Date(dateString).toLocaleDateString() : 'N/A';
+}
+    </script>
+</body>
+</html>

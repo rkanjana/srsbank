@@ -98,9 +98,9 @@
     <div class="container">
         <aside class="sidebar">
             <h3>Menu</h3>
-            <button onclick="showSection('account-details')">Account Details</button>
-            <button onclick="showSection('recent-transactions')">Transactions History</button>
-            <button onclick="showSection('money-transfer')">Money Transfer</button>
+            <button onclick="account()">Account Details</button>
+            <button onclick="statement()">Transactions History</button>
+            <button onclick="transfer()">Money Transfer</button>
             <button onclick="logout()">Logout</button>
         </aside>
         <div class="main-content">
@@ -181,8 +181,20 @@
             // Redirect to login page
             window.location.href = "userloginpage.html";
         }
+        function statement() {
+            // Redirect to login page
+            window.location.href = "statement.html";
+        }
         function showSection(section) {
             console.log("Show section:", section);
+        }
+        function account() {
+            // Redirect to login page
+            window.location.href = "Accountdetails.html";
+        }
+        function transfer() {
+            // Redirect to login page
+            window.location.href = "tranfer.html";
         }
     </script>
 </body>

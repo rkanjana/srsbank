@@ -146,7 +146,7 @@ async function sendAccountEmail(email, account_number, password) {
         from:  process.env.EMAIL_USER,
         to: email,
         subject: "Your New Nexus Bank Account Details",
-        text: `Welcome to SFC Bank!\n\nYour Account Number: ${account_number}\nYour Password: ${password}\n\nPlease keep these details secure.`
+        text: `Welcome to NEXUS Bank!\n\nYour Account Number: ${account_number}\nYour Password: ${password}\n\nPlease keep these details secure.`
     };
 
     return transporter.sendMail(mailOptions);
@@ -339,8 +339,166 @@ app.get('/user-profile', (req, res) => {
     });
 });
 
+// Get account statements
+app.get('/statements/:accountNumber', (req, res) => {
+    const accountNumber = req.params.accountNumber;
+    const sql = `SELECT 
+                    transaction_date AS date, 
+                    account_number AS sender, 
+                    releated_account AS receiver,
+                    transaction_type AS type, 
+                    amount 
+                 FROM transactions1 
+                 WHERE account_number = ? 
+                 ORDER BY transaction_date DESC`;
+    db.query(sql, [accountNumber], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ transactions: results });
+    });
+});
 
+// Money Transfer Endpoint
+app.post('/transfer', async (req, res) => {
+    try {
+        const { sender_account, receiver_account, amount } = req.body;
 
+        // Validate input
+        if (!sender_account || !receiver_account || !amount || amount <= 0) {
+            return res.status(400).json({ 
+                success: false,
+                error: "All fields are required and amount must be positive"
+            });
+        }
+
+        // Start transaction
+        await db.promise().beginTransaction();
+
+        // 1. Check sender balance
+        const [sender] = await db.promise().query(
+            `SELECT balance FROM customer_account3 WHERE account_number = ? FOR UPDATE`, 
+            [sender_account]
+        );
+
+        if (sender.length === 0) {
+            throw new Error("Sender account not found");
+        }
+
+        if (sender[0].balance < amount) {
+            throw new Error("Insufficient funds");
+        }
+
+        // 2. Verify receiver exists
+        const [receiver] = await db.promise().query(
+            `SELECT account_number FROM customer_account3 WHERE account_number = ? FOR UPDATE`,
+            [receiver_account]
+        );
+
+        if (receiver.length === 0) {
+            throw new Error("Receiver account not found");
+        }
+
+        // 3. Update sender balance
+        await db.promise().query(
+            `UPDATE customer_account3 SET balance = balance - ? WHERE account_number = ?`,
+            [amount, sender_account]
+        );
+
+        // 4. Update receiver balance
+        await db.promise().query(
+            `UPDATE customer_account3 SET balance = balance + ? WHERE account_number = ?`,
+            [amount, receiver_account]
+        );
+
+        // 5. Record transaction
+        await db.promise().query(
+            `INSERT INTO transactions1 
+            (account_number, transaction_type, amount, releated_account)
+            VALUES (?, 'Transfer', ?, ?)`,
+            [sender_account, amount, receiver_account]
+        );
+
+        // Commit transaction
+        await db.promise().commit();
+
+        res.json({ 
+            success: true,
+            message: `Successfully transferred ₹${amount} to account ${receiver_account}`
+        });
+
+    } catch (error) {
+
+        await db.promise().rollback();
+        console.error("Transfer error:", error);
+        res.status(500).json({ 
+            success: false,
+            error: error.message || "Transfer failed"
+        });
+    }
+});
+app.get('/user-profile-full', (req, res) => {
+    try {
+        const { account_number } = req.query;
+        
+        if (!account_number) {
+            return res.status(400).json({ 
+                error: "Account number is required",
+                details: "Add ?account_number=YOUR_ACCOUNT_NUMBER to the URL"
+            });
+        }
+
+        const sql = `
+            SELECT 
+                cr.name,
+                cr.nationality,
+                cr.address,
+                cr.city,
+                cr.state,
+                cr.phone_no,
+                cr.email,
+                cr.dob,
+                cr.branch,
+                cr.currency,
+                ca.account_number,
+                ca.ifsc_code,
+                ca.account_type,
+                ca.balance
+            FROM 
+                customer_account3 ca
+            JOIN 
+                customer_registration1 cr ON ca.customer_id = cr.customer_id
+            WHERE 
+                ca.account_number = ?
+            LIMIT 1`;
+        
+        db.query(sql, [account_number], (err, results) => {
+            if (err) {
+                console.error("Database error:", err);
+                return res.status(500).json({ 
+                    error: "Database query failed",
+                    details: err.message
+                });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({ 
+                    error: "Account not found",
+                    details: `No account found with number ${account_number}`
+                });
+            }
+
+            res.json({
+                success: true,
+                profile: results[0]
+            });
+        });
+    } catch (err) {
+        console.error("Server error:", err);
+        res.status(500).json({ 
+            error: "Internal server error",
+            details: err.message 
+        });
+    }
+});
 // Request Leave (POST)
 app.post("/request-leave", (req, res) => {
     const { emp_id, start_date, end_date, reason, manager_id } = req.body;
