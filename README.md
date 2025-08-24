@@ -1,2 +1,2 @@
-# srsbank
- This is a project which we are using to develope for banking systems
+# NEXUS Bank
+ This is a project that we are using to develop an online banking system.
